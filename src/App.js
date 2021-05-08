@@ -1,24 +1,51 @@
 import React from 'react';
-import logo from './logo.svg';
+// import data from './data/data.json';
+import { ForceGraph } from "./components/forceGraph";
 import './App.css';
 
+const data = {
+  nodes: [],
+  links: []
+};
+
+Array.from(Array(1000).keys()).map(key => {
+  data.nodes.push({
+    "id": key,
+    "name": "number "+ key,
+    "gender": "female"
+  })
+  if(key % 2 === 0 && key > 1) {
+    // console.log({
+    //   "source": +key - 1,
+    //   "target": key
+    // });
+    data.links.push({
+      "source": +key - 1,
+      "target": key
+    });
+    data.links.push({
+      "source": +key - 1,
+      "target": key - 2
+    });
+  }
+});
+
 function App() {
+  const nodeHoverTooltip = React.useCallback((node) => {
+    return `<div>     
+      <b>${node.name}</b>
+    </div>`;
+  }, []);
+
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        Force Graph Example
       </header>
+      <section className="Main">
+        <ForceGraph linksData={data.links} nodesData={data.nodes} nodeHoverTooltip={nodeHoverTooltip} />
+      </section>
     </div>
   );
 }
